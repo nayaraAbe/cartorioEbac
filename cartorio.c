@@ -107,28 +107,71 @@ int consulta()
 		printf ("Não foi possível localizar o usuário! \n");
 	}
 	
-	//Se não se a resposta dada for diferente de NULL(valor nulo):
-	else if (file != NULL)
+	//Se a resposta dada for diferente de NULL
+	else if(file != NULL)
 	{
-		//Será apresnetada a seguinte mensagem 
+		//Será apresnetada a seguinte mensagem +
 		printf ("\nEssas são as informações do usuário: \n");
-		
 		//enquanto "fgets"(realiza a leitura) for diferente de NULL, irá ler o arquivo
 		while (fgets(conteudo, 200, file) != NULL) 
-		{	
-			//Leitura das váriaveis registradas 
+		{
+			//Leitura das variáveis registradas 
 			printf ("%s", conteudo);
 		}
-		printf("\n\n");
 	}
 	
-	//Se não houver dados na resposta dada:
-	else
-	{ 
-	printf("CPF inserido não localizado");
-	}
+	//Condição apresentada caso queira consultar mais de um usuário
+	printf ("\n\nAinda deseja consultar um usuário? Se sim digite (S), se não (N): \n");
+	
+	getchar(); //Registra o caracter apresentado
+	resp = getchar(); //Váriavel 'resp' recebe o caracter
 		
-	system ("pause");
+	//Enquanto variável 'resp' receber valor igual a s/S	
+	while (resp == 's' || resp == 'S')
+	{
+		//realiza a operação de consulta novamente
+		printf ("\nDigite o CPF a ser consultado: \n");
+		scanf ("%s", cpf);
+		
+		FILE *file;
+		file = fopen (cpf, "r");
+	
+		if (file == NULL)
+		{
+			printf ("\nNão foi possível localizar o usuário! \n");
+		}
+	
+		else if(file != NULL)
+		{
+			printf ("\nEssas são as informações do usuário: \n");
+			while (fgets(conteudo, 200, file) != NULL) 
+			{
+				printf ("%s", conteudo);
+			}
+		}
+				
+		//Realiza a pergunta de consulta novamente e salva na variável 'resp'
+		printf ("\n\nDeja consultar mais um usuário? Se sim digite (S), se não (N): \n");
+		getchar();
+		resp = getchar();
+	}	
+	
+	//Se variável 'resp' receber valor igual a n/N
+	if (resp == 'n' || resp == 'N')
+	{
+		//Será pausado o sistema e retornará ao MENU
+		printf("\nRetorno ao Menu Principal. \n");
+		system("pause");		
+	}
+	//Caso a variável 'resp' não receba valor correspondente
+	else
+	{
+		//Será pausado o sistema e retornará ao MENU
+		printf("\nOpção inválida! Retorno ao Menu Principal.\n"); 
+		system("pause");
+	}	
+	printf ("\n\n");
+	fclose (file); //Fechamento do arquivo
 }
 
 //Deletar Usuário
@@ -138,25 +181,62 @@ int deletar()
 	//Criação do vetor 'cpf' para consultar no registro
 	char cpf[40];
 	
-	//Salva a resposta dada para realizar a consulta da váriavel 'cpf'
+	//Salva a resposta dada para realizar a consulta da variável 'cpf'
 	printf ("Digite o CPF a ser deletado: \n");
 	scanf ("%s", cpf);
-	
-	//remove o CPF
-	remove(cpf);
 	
 	//Abre o arquivo com "r"(read - leitura)
 	FILE *file;
 	file = fopen(cpf, "r"); 
 	
-	//Se o arquivo for igual a NULL:
-	if (file == NULL)
+	//Se arquivo for igual a NULL
+	if (file == NULL) 
 	{
-		//Apresenterá a seguinte mensagem:
-		printf("O usuário já não se encontra no sistema!\n");
+		//Será dada a seguinte resposta e o sistema será pausado com retorno ao MENU
+		printf ("Usuário não encontado no sistema!\n");
+		system ("pause");
+		return 0; //Retorno para tela inicial
+	}
+	
+	fclose (file); //Fechando e confirmando a existecia do arquivo 
+	
+	//confimação do usuário para deletar os arquivos
+	
+	printf ("Deseja realmente deletar este usuário do sistema?\n");
+	printf ("%s", cpf);
+	printf ("\nDigite (S) para confimar ou (N) caso não deseje deletar o usuário: \n");
+	
+	getchar(); //Função responsável por salvar o caractere digitado 
+	
+	//Variável caractere criada
+	char opcao;
+	opcao = getchar(); //A variável 'pega' o valor escreito pelo usuário e o salva em 'getchar'(pegar o caracter)
+	
+	//se for digitado (s)
+	if (opcao == 's' || opcao == 'S')
+	{
+		if (cpf != NULL) //confere se a remoção foi bem sucedida com a seguinte mensagem
+		{
+		remove(cpf);//remove o arquivo 'cpf'
+		printf("\nO usuário foi deletado com sucesso!\n");
+		printf("\nRetorno ao Menu Principal.\n");
 		system("pause");
-		
-	}	
+		}
+	}
+	
+	//se for digitado (n)
+	else if (opcao == 'n' || opcao == 'N')
+	{
+		printf ("\nVocê será retornado(a) ao Menu Principal. \n");
+		system ("pause");
+	}
+	
+	//Caso o cpf inserido não exista
+	else
+	{
+		printf("Opção inválida");
+		system("pause");
+	}
 }
 
 //MENU PRINCIPAL
@@ -180,7 +260,8 @@ int main()
 		printf("Escolha a opção desejada do menu:\n\n");
 		printf("\t1 - Registrar nomes\n");
 		printf("\t2 - Consultar nomes\n");
-		printf("\t3 - Deletar nomes\n\n"); 
+		printf("\t3 - Deletar nomes\n");
+		printf("\t4 - Saída do sistema\n\n");
 		printf("Opção: "); 
 		//Final do menu
 		
@@ -200,6 +281,11 @@ int main()
 				
 			case 3:	
 			deletar();
+			break;
+			
+			case 4:
+			printf("Obrigado por utilizar o sistema!\n");
+			return 0;
 			break;
 				
 			default:
