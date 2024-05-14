@@ -10,6 +10,7 @@ int registro()
 	//Criação dos vetores(strings) para REGISTRAR os dados do usuário
 	char arquivo[40];
 	char cpf[40];
+	char senha[40];
 	char nome[40];
 	char sobrenome[40];
 	char cargo[40];
@@ -33,6 +34,19 @@ int registro()
     fprintf (file, "\n");
     fclose (file);
     
+    //Registro de SENHA
+    printf("Digite a senha a ser cadastrada: \n");
+    scanf("%s", senha);
+    
+    file = fopen (arquivo, "a"); //Abre o arquivo para "a"(adicionar/atualizar)
+    fprintf(file,"\nSenha: "); //Adicionado para CONSULTAR a SENHA
+    fprintf(file, "%s", senha); //Salva o dado 'senha' dentro de uma variáveil
+    fclose(file);
+    
+    //Quebra de linha
+    file = fopen (arquivo, "a"); //Abre o arquivo para "a"(adicionar/atualizar)
+    fprintf (file, "\n");
+    fclose (file);
     
     //Registro NOME:
     printf ("Digite o nome a ser cadastrado: \n");
@@ -60,8 +74,8 @@ int registro()
 	fprintf (file, "\nSobrenome: ");
 	para fins estéticos
 	*/
-	
-	//Espaço
+    
+    //Quebra de linha
     file = fopen (arquivo, "a"); //Abre o arquivo para "a"(adicionar/atualizar)
     fprintf (file, "\n");
     fclose (file);
@@ -72,11 +86,73 @@ int registro()
     
     file = fopen (arquivo, "a"); //Abre o arquivo para "a"(adicionar/atualizar)
     fprintf (file, "\nCargo: "); //Adicionado para CONSULTAR o CARGO
-    fprintf (file,"%s", cargo); //Salva o dado 'cargo' dentro de uma váriavel
+    fprintf (file,"%s", cargo); //Salva o dado 'cargo' dentro de uma variável
     fclose (file);
     
     system ("pause");//Pausa o sistema e volta ao MENU
     
+}
+
+//Login do Usuário
+int login()
+{
+	
+	//Definição da línguagem
+	setlocale (LC_ALL, "Portuguese");
+	
+	//Criação dos vetores(strings) para identificar o login do usuário
+	char cpf[40];
+	char senha[40];
+	char conteudo[200];
+	
+	//Salva o cpf como forma de login
+	printf("Degite o CPF como login: \n");
+	scanf("%s",cpf);
+	
+	//Salva a senha que o usuário deseja utilizar
+	printf("Digite a senha: \n");
+	scanf("%s",senha);
+	
+	char arquivo[40];
+	strcpy(arquivo, cpf);
+	
+	//Abertura do arquivo com "r"(write - escreva)
+	FILE *file;
+	file = fopen(arquivo, "r");
+	
+	//Se o arquivo for igual a NULL(valor nulo)
+	if(file == NULL)
+	{
+		//O usuário não será encontrado
+		printf("Usuário não encontrado!\n");
+		return 0;
+	}
+	//Se arquivo for diferente de NULL
+	else
+	{
+		//Realiza a consulta dos dados dentro do arquivo
+		fgets(conteudo, 200, file);
+		fgets(conteudo, 200, file);
+		
+		//Se os dados forem deferentes de NULL
+		if(strstr(conteudo, senha) != NULL)
+		{
+			//O usuário tem acesso ao MENU
+			printf("\nBem-vindo, usuário encontrado!\n");
+		}
+		//Caso os dados não forem achados no arquivo
+		else
+		{
+			printf("\nCPF ou senha incorretos!\n");
+		}
+		
+		//Fecha o arquivo e retorna ao MENU
+		fclose(file);
+		return 1;
+		
+	}	
+
+	
 }
 
 //Consulta do Usuário
@@ -247,9 +323,54 @@ int main()
 	int opcao = 0; 
 	int laco = 1;
 	
+	//Definição da línguagem
+	setlocale(LC_ALL,"Portuguese");
+	
+	printf("### Cartório da EBAC ###\n\n");
+	//Enquanto laco igual a 1
+	while (laco == 1)
+	{
+		//Menu de login
+		printf("Escolha a opção desejada: \n\n");
+		printf("\t1 - Login\n");
+		printf("\t2 - Registrar Usuário\n");
+		printf("\t3 - Saída do sistema\n\n");
+		printf("Opção: ");
+		scanf("%d",&opcao);
+		
+		switch (opcao)
+		{
+			case 1:
+			//Chama a função login e se caso o valor retorne verdadeiro
+			if(login())
+			{
+				laco = 0; //Para o loop do MENU DE LOGIN se o valor do laco for 0 
+			}
+			break;
+			
+			case 2:
+			registro();
+			break;
+			
+			case 3:
+			printf("Obrigado por utilizar o sistema!\n");
+			return 0;
+			break;
+			
+			default:
+			printf("Essa opção não está disponivel!\n");
+			system("pause");
+			break;
+			
+		}
+	}
+	
 	//Repetição do menu
-	for(laco = 1;laco == 1;) 
-	{	
+	laco = 1;
+	
+	//enquanto laco igual a 1
+	while(laco == 1)
+	{
 		system("cls");
 		
 		//Definição da líguagem
@@ -294,7 +415,7 @@ int main()
 			break;
 			
 		} //Fim da seleção
-		
+			
 	}//Fim da repetição do menu
 
 }
