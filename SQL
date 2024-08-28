@@ -1,0 +1,49 @@
+-- interação com SQL
+--INIT TABELAS
+
+CREATE TABLE usuários
+(
+  CPF VARCHAR(50),
+  SENHA VARCHAR(50),
+  NOME VARCHAR(50),
+  SOBRENOME VARCHAR(50),
+  CARGO VARCHAR(50),
+  CURSO_ID INT,
+  PRIMARY KEY (CPF) -- Adicionando uma chave primária para identificar unicamente cada usuário
+);
+
+CREATE TABLE cursos
+(
+  ID INT PRIMARY KEY, -- Adicionando uma chave primária para identificar unicamente cada curso
+  NOME_CURSO VARCHAR(50),
+  PROFESSOR VARCHAR(50),
+  CATEGORIA VARCHAR(50)
+);
+
+--INSERT
+
+INSERT INTO usuários(CPF, SENHA, NOME, SOBRENOME, CARGO, CURSO_ID) VALUES
+('123', '456', 'NAYARA', 'ABE', 'ALUNA', 1),
+('234', '567', 'DEBORAH', 'TORRES', 'ALUNA', 1),
+('345', '678', 'JEAN', 'ALMEIDA', 'ALUNO', 1),
+('321', '432', 'FABRICIO', 'BARBOSA', 'ALUNO', 2),
+('543', '654', 'VITORIA', 'ARAUJO', 'ALUNA', 2),
+('765', '876', 'EDWARD', 'RIBEIRO', 'ALUNO', 2);
+
+INSERT INTO cursos(ID, NOME_CURSO, PROFESSOR, CATEGORIA) VALUES
+(1, 'TI DO ZERO', 'PEDRO BROCALDI', 'PROGRAMAÇÃO'),
+(2, 'POWER BI', 'RENATA PEREIRA', 'DATA & ANALYTICS SPECIALIST');
+
+-- Delete
+DELETE FROM usuários
+WHERE CPF = '765';
+
+-- Migração
+UPDATE usuários 
+SET CURSO_ID = '2'
+WHERE CPF = '234';
+
+--QUERY TABELA
+SELECT * FROM 	usuários, cursos
+WHERE usuários.CURSO_ID = cursos.ID -- Cruzamento de tabelas
+AND cursos.NOME_CURSO = 'POWER BI';
